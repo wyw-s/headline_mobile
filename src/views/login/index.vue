@@ -41,16 +41,16 @@ export default {
         duration: 0, // 展时时长 为0 则不会消失
         message: '加载中...', // 提示信息
         forbidClick: true, // 禁止背景点击
-        loadingType: 'spinner'
+        loadingType: 'spinner' // 样式
       })
       try {
         // 如果响应成功，则后面的代码执行，如果不成功，则后面的代码不执行；
-        // 直接进入catch
-        const res = await login(this.user)
-        console.log('登录成功', res)
+        // 直接进入catch,data为响应回来的直接数据(里面包含所有的响应数据)，名字不可更改
+        const { data } = await login(this.user)
+        // 登录成功把token保存起来
+        this.$store.commit('SetUser', data)
         this.$toast.success('登录成功')
       } catch (error) {
-        console.log('登录失败', error)
         this.$toast.fail('登录失败,手机号或验证码错误')
       }
     }

@@ -4,6 +4,7 @@
 
 import axios from 'axios'
 import JsonBib from 'json-bigint'
+import store from '../store/index.js'
 
 /**
  * 封装 axios 函数
@@ -22,6 +23,15 @@ const request = axios.create({
  */
 request.interceptors.request.use(
   function (config) {
+    // 统一添加token
+    // 获取容器中的token;
+    const Token = store.state.Token
+    // 判断token 是否存在，若存在则添加到请求头中；
+    if (Token) {
+      // config.headers.Authorization = `Bearer ${Token.token}`
+      // 通过键值对的方式添加token
+      config.headers['Authorization'] = `Bearer ${Token.token}`
+    }
     return config
   },
   function (error) {
