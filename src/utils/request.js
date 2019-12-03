@@ -59,7 +59,6 @@ request.defaults.transformResponse = [
  */
 request.interceptors.response.use(
   function (response) {
-    console.log(response)
     return response
   },
   function (error) {
