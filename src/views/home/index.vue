@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="home">
     <!--
       NavBar 导航栏 组件
     -->
-    <van-nav-bar title="标题"/>
+    <van-nav-bar title="首页" fixed/>
     <!--
       Tab 标签页 组件<==>频道列表
     -->
@@ -28,10 +28,24 @@
               @load="onLoad"
           >
             <van-cell
-                v-for="item in Channel.news"
-                :key="item.aut_id"
-                :title="item.title"
-            />
+                v-for="(art, index) in Channel.news"
+                :key="index"
+                :title="art.title"
+            >
+              <van-grid :border="false" :column-num="3">
+                <van-grid-item
+                    v-for="(img,index) in art.cover.images"
+                    :key="index"
+                >
+                  <van-image height="80" :src="img"/>
+                </van-grid-item>
+              </van-grid>
+              <div class="article-info">
+                <span>{{Channel.aut_name}}</span>
+                <span>{{Channel.comm_count}}评论</span>
+                <span>{{ Channel.pubdate | relativeTime }}</span>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -58,6 +72,7 @@ export default {
   methods: {
     // 获取频道列表函数
     async GetChannels () {
+      console.log(this.ChannelList)
       const { data } = await getDefaultChannels()
       const List = data.data.channels
       /**
@@ -133,6 +148,31 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  .home {
+    position: relative;
+
+    .van-cell {
+      flex-direction: column;
+
+      .article-info span {
+        margin-right: 10px;
+      }
+    }
+    .van-tabs {
+      // 频道列表
+      /deep/ .van-tabs__wrap {
+        position: fixed;
+        top: 46px;
+        z-index: 2;
+        right: 0;
+        left: 0;
+      }
+      // 频道内容
+      /deep/ .van-tabs__content {
+        margin-top: 90px;
+      }
+    }
+  }
 
 </style>

@@ -8,6 +8,7 @@ import './utils/register-vant.js'
 import 'amfe-flexible'
 import './utils/request.js'
 import './styles/index.less'
+import './utils/TimeHandling.js'
 
 Vue.config.productionTip = false
 
