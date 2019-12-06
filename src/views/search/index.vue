@@ -8,17 +8,19 @@
           show-action
           shape="round"
           @search="OnSearch"
+          @input="Oninput"
       >
         <div slot="action" @click="OnSearch">搜索</div>
       </van-search>
     </form>
     <!--联想建议-->
     <van-cell-group :border="false">
-      <van-cell title="单元格" icon="search"/>
-      <van-cell title="单元格" icon="search"/>
-      <van-cell title="单元格" icon="search"/>
-      <van-cell title="单元格" icon="search"/>
-      <van-cell title="单元格" icon="search"/>
+      <van-cell
+          v-for="item in AssociateList"
+          :key="item"
+          :title="item"
+          icon="search"
+      />
     </van-cell-group>
     <!--搜索历史记录-->
     <van-cell-group>
@@ -41,17 +43,23 @@
 </template>
 
 <script>
+import { Search } from '../../api/search.js'
 export default {
   name: 'search-index',
   data: function () {
     return {
-      SearchText: ''
+      SearchText: '',
+      AssociateList: []
     }
   },
   methods: {
     OnSearch (e) {
-      console.log(234)
-      console.log(e)
+    },
+    async Oninput () {
+      // 去除两侧空格并进行非空判断
+      if (!this.SearchText.trim()) return
+      const { data } = await Search(this.SearchText)
+      this.AssociateList = data.data.options
     }
   }
 }
