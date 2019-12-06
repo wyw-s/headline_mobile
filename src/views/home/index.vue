@@ -3,7 +3,14 @@
     <!--
       NavBar 导航栏 组件
     -->
-    <van-nav-bar title="首页" fixed/>
+    <van-nav-bar title="首页" fixed>
+      <van-button
+          slot="title"
+          round type="info"
+          size="small"
+          @click="$router.push('/search')"
+      >搜索</van-button>
+    </van-nav-bar>
     <!--
       Tab 标签页 组件<==>频道列表
     -->
@@ -282,6 +289,9 @@ export default {
 <style lang="less" scoped>
   .home {
     position: relative;
+    .van-button {
+      width: 100%;
+    }
 
     /*图片*/
 
