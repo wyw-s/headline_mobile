@@ -18,9 +18,10 @@
       <van-cell
           v-for="item in AssociateList"
           :key="item"
-          :title="item"
           icon="search"
-      />
+      >
+        <span slot="title" v-html="highlight(item)"></span>
+      </van-cell>
     </van-cell-group>
     <!--搜索历史记录-->
     <van-cell-group>
@@ -55,11 +56,17 @@ export default {
   methods: {
     OnSearch (e) {
     },
+    // 联想建议
     async Oninput () {
       // 去除两侧空格并进行非空判断
       if (!this.SearchText.trim()) return
       const { data } = await Search(this.SearchText)
       this.AssociateList = data.data.options
+    },
+    // 关键字高亮
+    highlight (item) {
+      const res = new RegExp(this.SearchText, 'gi')
+      return item.replace(res, `<span style="color: red">${this.SearchText}</span>`)
     }
   }
 }
