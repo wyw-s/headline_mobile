@@ -78,9 +78,10 @@
         </van-cell>
         <van-grid :column-num="4" :gutter="10">
           <van-grid-item
-              v-for="Channel in ChannelList"
+              v-for="(Channel, index) in ChannelList"
               :key="Channel.id"
               :text="Channel.name"
+              @click="OnDelete(index)"
           >
             <!--slot="icon" 宫格的具名插槽-->
             <van-icon
@@ -228,6 +229,17 @@ export default {
     // 由于计算属性的存在所以，推荐频道的数据会自动发生变化
     OnAddCnannel (AllChannel) {
       this.ChannelList.push(AllChannel)
+    },
+    OnDelete (index) {
+      // 判断当前的状态按钮的状态。
+      if (this.isEdit) {
+        // 当前是编辑状态则点击删除
+        this.ChannelList.splice(index, 1)
+      } else {
+        // 如果是非编辑状态点击则关闭弹窗，并切换到相对应的频道页面；
+        this.isChannelEditShow = false
+        this.active = index
+      }
     }
   }
 }
