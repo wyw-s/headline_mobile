@@ -240,7 +240,22 @@ export default {
     // 获取全部频道，弹出窗打开时触发；
     async onChannelOpen () {
       const { data } = await AllChannels()
-      this.AllChannels = data.data.channels
+      /**
+       * 由于新添加的频道对象里面没有上拉刷新和下拉刷新属性；
+       * 所以会导致报错处理；
+       * 解决：
+       *  在获取全部频道的同时，为每个频道对象新增属性；
+       */
+      const AllAllChannel = data.data.channels
+      AllAllChannel.forEach((item) => {
+        // 追加新闻数据；
+        item.news = [] // 频道对应的新闻列表
+        item.loading = false // 上拉刷新
+        item.finished = false // 上拉刷新
+        item.isLoading = false // 下拉刷新
+        item.pre_timestamp = null // 储存用于获取下一页的时间戳
+      })
+      this.AllChannels = AllAllChannel
     },
 
     // 点击添加频道，点击获取当前频道信息，然后把当前频道数据添加到我的频道中；
