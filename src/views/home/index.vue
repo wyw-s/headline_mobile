@@ -81,7 +81,7 @@
               v-for="(Channel, index) in ChannelList"
               :key="Channel.id"
               :text="Channel.name"
-              @click="OnDelete(index)"
+              @click="OnDelete(Channel, index)"
           >
             <!--slot="icon" 宫格的具名插槽-->
             <van-icon
@@ -89,7 +89,7 @@
                 name="close"
                 size="20px"
                 class="close-icon"
-                v-show="isEdit"
+                v-show="isEdit && Channel.name !== '推荐'"
             />
           </van-grid-item>
         </van-grid>
@@ -230,12 +230,12 @@ export default {
     OnAddCnannel (AllChannel) {
       this.ChannelList.push(AllChannel)
     },
-    OnDelete (index) {
-      // 判断当前的状态按钮的状态。
-      if (this.isEdit) {
+    OnDelete (Channel, index) {
+      // 判断当前的状态按钮的状态。并去除推荐的点击删除功能；
+      if (this.isEdit && Channel.name !== '推荐') {
         // 当前是编辑状态则点击删除
         this.ChannelList.splice(index, 1)
-      } else {
+      } else if (!this.isEdit) {
         // 如果是非编辑状态点击则关闭弹窗，并切换到相对应的频道页面；
         this.isChannelEditShow = false
         this.active = index
