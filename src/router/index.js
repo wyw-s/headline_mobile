@@ -4,6 +4,7 @@ import Login from '../views/login/index.vue'
 import Tabbar from '../views/tabbar/index.vue'
 import Home from '../views/home/index.vue'
 import Search from '../views/search'
+import SearchResult from '../views/search-result'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,10 @@ const routes = [
   {
     path: '/search',
     component: Search
+  },
+  {
+    path: '/search/:q',
+    component: SearchResult
   }
 ]
 
