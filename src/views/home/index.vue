@@ -31,6 +31,7 @@
                 v-for="(art, index) in Channel.news"
                 :key="index"
                 :title="art.title"
+                class="imgstyle"
             >
               <van-grid :border="false" :column-num="3">
                 <van-grid-item
@@ -49,12 +50,64 @@
           </van-list>
         </van-pull-refresh>
       </van-tab>
+      <!--tabs 组件提供的nav-right插槽-->
+      <div class="wap-nav" slot="nav-right" @click="isChannelEditShow = true">
+        <van-icon name="wap-nav"/>
+      </div>
     </van-tabs>
+    <!--弹窗组件-->
+    <van-popup
+        :round="true"
+        v-model="isChannelEditShow"
+        position="bottom"
+        closeable
+        close-icon-position="top-left"
+        :style="{ height: '93%' }"
+        @open="onChannelOpen"
+    >
+      <div class="channel-container">
+        <van-cell
+            title="我的频道"
+            :border="false"
+        >
+          <van-button
+              type="danger"
+              size="mini"
+              @click="isEdit = !isEdit "
+          >{{ isEdit? '完成' : '编辑' }}</van-button>
+        </van-cell>
+        <van-grid :column-num="4" :gutter="10">
+          <van-grid-item
+              v-for="Channel in ChannelList"
+              :key="Channel.id"
+              :text="Channel.name"
+          >
+            <!--slot="icon" 宫格的具名插槽-->
+            <van-icon
+                slot="icon"
+                name="close"
+                size="20px"
+                class="close-icon"
+                v-show="isEdit"
+            />
+          </van-grid-item>
+        </van-grid>
+        <van-cell title="推荐频道" :border="false"/>
+        <van-grid :column-num="4" :gutter="10">
+          <van-grid-item
+              v-for="AllChannel in RmChannelList"
+              :key="AllChannel.id"
+              :text="AllChannel.name"
+              @click="OnAddCnannel(AllChannel)"
+          />
+        </van-grid>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { getDefaultChannels } from '../../api/channel.js'
+import { getDefaultChannels, AllChannels } from '../../api/channel.js'
 import { Getnews } from '../../api/NewList.js'
 
 export default {
@@ -62,12 +115,32 @@ export default {
   data () {
     return {
       active: 0, // 当前点击频道的索引
-      ChannelList: [] // 频道列表
+      ChannelList: [], // 频道列表
+      isChannelEditShow: false, // 弹窗的开启与关闭
+      AllChannels: [],
+      isEdit: false
     }
   },
   created () {
     // 页面加载获取频道列表
     this.GetChannels()
+  },
+  computed: {
+    // 判断全部频道中的每一项和我的频道是否有相同的，有则剔除；
+    RmChannelList () {
+      const arr = []
+      this.AllChannels.forEach(Channels => {
+        const arr_ = this.ChannelList.find(item => {
+          // 返回的是相同的项
+          return item.id === Channels.id
+        })
+        // 如果我的频道里面包含当前项则跳过，反之则添加到数组中；
+        if (!arr_) {
+          arr.push(Channels)
+        }
+      })
+      return arr
+    }
   },
   methods: {
     // 获取频道列表函数
@@ -143,6 +216,18 @@ export default {
       ChannelNew.news.unshift(...data.data.results)
       ChannelNew.isLoading = false
       this.$toast('刷新成功')
+    },
+
+    // 获取全部频道，弹出窗打开时触发；
+    async onChannelOpen () {
+      const { data } = await AllChannels()
+      this.AllChannels = data.data.channels
+    },
+
+    // 点击添加频道，点击获取当前频道信息，然后把当前频道数据添加到我的频道中；
+    // 由于计算属性的存在所以，推荐频道的数据会自动发生变化
+    OnAddCnannel (AllChannel) {
+      this.ChannelList.push(AllChannel)
     }
   }
 }
@@ -152,13 +237,18 @@ export default {
   .home {
     position: relative;
 
-    .van-cell {
+    /*图片*/
+
+    .imgstyle {
       flex-direction: column;
 
       .article-info span {
         margin-right: 10px;
       }
     }
+
+    /* 导航栏*/
+
     .van-tabs {
       // 频道列表
       /deep/ .van-tabs__wrap {
@@ -168,9 +258,34 @@ export default {
         right: 0;
         left: 0;
       }
+
       // 频道内容
       /deep/ .van-tabs__content {
         margin-top: 90px;
+      }
+    }
+
+    /*面包按钮*/
+
+    .wap-nav {
+      position: sticky;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      opacity: 0.8;
+    }
+
+    .channel-container {
+      margin-top: 30px;
+      .van-grid-item {
+        position: relative;
+      }
+      /deep/ .van-grid-item__icon-wrapper {
+        position: absolute;
+        right: -8px;
+        top: -17px;
       }
     }
   }
