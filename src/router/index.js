@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/login/index.vue'
 import Tabbar from '../views/tabbar/index.vue'
 import Home from '../views/home/index.vue'
+import Search from '../views/search'
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,10 @@ const routes = [
         component: Home
       }
     ]
+  },
+  {
+    path: '/search',
+    component: Search
   }
 ]
 
