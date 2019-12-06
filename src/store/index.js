@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { SetToken, GetToken } from '../utils/storage.js'
+import { SetStorage, GetStorage } from '../utils/storage.js'
 
 Vue.use(Vuex)
 
@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     // 若本地有token数据则页面加载就要获取
     // 若没有 token 则就是null
-    Token: GetToken('login_token')
+    Token: GetStorage('login_token')
   },
   mutations: {
     /**
@@ -25,7 +25,7 @@ export default new Vuex.Store({
        * 除非页面刷新重新加载获取数据
        */
       state.Token = data.data
-      SetToken('login_token', data.data)
+      SetStorage('login_token', data.data)
     }
   },
   actions: {
