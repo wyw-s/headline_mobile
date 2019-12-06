@@ -7,10 +7,10 @@
           placeholder="请输入搜索关键词"
           show-action
           shape="round"
-          @search="OnSearch"
           @input="Oninput"
       >
-        <div slot="action" @click="OnSearch">搜索</div>
+          <!--@search="OnSearch"-->
+        <div slot="action" @click="OnSearch(SearchText)">搜索</div>
       </van-search>
     </form>
     <!--联想建议-->
@@ -19,6 +19,7 @@
           v-for="item in AssociateList"
           :key="item"
           icon="search"
+          @click="OnSearch(item)"
       >
         <span slot="title" v-html="highlight(item)"></span>
       </van-cell>
@@ -49,17 +50,19 @@ export default {
   name: 'search-index',
   data: function () {
     return {
-      SearchText: '',
-      AssociateList: []
+      SearchText: '', // 搜索关键字
+      AssociateList: [] // 联想建议列表
     }
   },
   methods: {
-    OnSearch (e) {
+    OnSearch (q) {
+      this.$router.push(`/search/${q}`)
     },
     // 联想建议
     async Oninput () {
       // 去除两侧空格并进行非空判断
       if (!this.SearchText.trim()) return
+      // 获取联想建议结果
       const { data } = await Search(this.SearchText)
       this.AssociateList = data.data.options
     },
