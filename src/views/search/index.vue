@@ -9,12 +9,15 @@
           shape="round"
           @input="Oninput"
       >
-          <!--@search="OnSearch"-->
+        <!--@search="OnSearch"-->
         <div slot="action" @click="OnSearch(SearchText)">搜索</div>
       </van-search>
     </form>
     <!--联想建议-->
-    <van-cell-group :border="false">
+    <van-cell-group
+        :border="false"
+        v-show="SearchText"
+    >
       <van-cell
           v-for="item in AssociateList"
           :key="item"
@@ -25,20 +28,32 @@
       </van-cell>
     </van-cell-group>
     <!--搜索历史记录-->
-    <van-cell-group>
-      <van-cell title="历史记录" value="内容"  :border="false">
-        <span>全部删除</span>&nbsp;&nbsp;
-        <span>完成</span>
-        <van-icon name="delete" />
+    <van-cell-group v-show="!SearchText">
+      <van-cell
+          title="历史记录"
+          value="内容"
+          :border="false"
+      >
+        <div v-show="isDeleteShow">
+          <span @click="searchHistories = []">全部删除</span>&nbsp;&nbsp;
+          <span @click="isDeleteShow = false">完成</span>
+        </div>
+        <van-icon
+            name="delete"
+            v-show="!isDeleteShow"
+            @click="isDeleteShow = true"
+        />
       </van-cell>
-      <van-cell title="单元格" value="内容">
-        <van-icon name="delete" />
-      </van-cell>
-      <van-cell title="单元格" value="内容">
-        <van-icon name="delete" />
-      </van-cell>
-      <van-cell title="单元格" value="内容">
-        <van-icon name="delete" />
+      <van-cell
+          :title="item"
+          v-for="(item, index) in searchHistories"
+          :key="item"
+      >
+        <van-icon
+            name="delete"
+            v-show="isDeleteShow"
+            @click="searchHistories.splice(index, 1)"
+        />
       </van-cell>
     </van-cell-group>
   </div>
@@ -46,16 +61,45 @@
 
 <script>
 import { Search } from '../../api/search.js'
+import { GetStorage, SetStorage } from '../../utils/storage'
+
 export default {
   name: 'search-index',
   data: function () {
     return {
       SearchText: '', // 搜索关键字
-      AssociateList: [] // 联想建议列表
+      AssociateList: [], // 联想建议列表
+      searchHistories: GetStorage('search-histories') || [], // 搜索历史记录
+      isDeleteShow: false
+    }
+  },
+  watch: {
+    searchHistories () {
+      SetStorage('search-histories', this.searchHistories)
     }
   },
   methods: {
+    /**
+     * 搜索历史记录：
+     *    点击开始搜索时，获取要搜索的内容，并添加到数组中和保存到本地；
+     */
     OnSearch (q) {
+      // 非空判断和去除两侧空白符；
+      if (!q.trim()) {
+        return
+      }
+      // 查找已有的数组看是否已存在；
+      const index = this.searchHistories.indexOf(q)
+      if (index !== -1) {
+        // 若存在则删除
+        this.searchHistories.splice(index, 1)
+      }
+      // 把搜索的记录从前面添加到数组中
+      this.searchHistories.unshift(q)
+      // 保存到本地；
+      // 这里务必要手动进行本地储存因为，下面有一个路由，还没等监视到呢，页面已经发生跳转了
+      SetStorage('search-histories', this.searchHistories)
+      // 动态路由跳转；
       this.$router.push(`/search/${q}`)
     },
     // 联想建议
