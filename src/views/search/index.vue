@@ -62,6 +62,8 @@
 <script>
 import { Search } from '../../api/search.js'
 import { GetStorage, SetStorage } from '../../utils/storage'
+// 引入防抖的包
+import { debounce } from 'lodash'
 
 export default {
   name: 'search-index',
@@ -102,14 +104,16 @@ export default {
       // 动态路由跳转；
       this.$router.push(`/search/${q}`)
     },
-    // 联想建议
-    async Oninput () {
+
+    // 联想建议 防抖包提供的debounce(fn, 毫秒)方法，专门用于防抖
+    Oninput: debounce(async function () {
       // 去除两侧空格并进行非空判断
       if (!this.SearchText.trim()) return
       // 获取联想建议结果
       const { data } = await Search(this.SearchText)
       this.AssociateList = data.data.options
-    },
+    }, 300),
+
     // 关键字高亮
     highlight (item) {
       const res = new RegExp(this.SearchText, 'gi')
