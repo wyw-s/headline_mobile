@@ -19,3 +19,22 @@ export const getartile = function (id) {
     url: `/app/v1_0/articles/${id}`
   })
 }
+
+// 对文章点赞；
+export const ArtileLike = function (ArticleId) {
+  return request({
+    method: 'POST',
+    url: `/app/v1_0/article/likings`,
+    data: {
+      target: ArticleId
+    }
+  })
+}
+
+// 取消对文章的点赞；
+export const CancelLike = function (ArticleId) {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/likings/${ArticleId}`
+  })
+}

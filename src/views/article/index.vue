@@ -50,7 +50,8 @@
             type="primary"
             plain
             icon="good-job-o"
-        >点赞</van-button>
+            @click="OnArticlelike(article.article_details.attitude)"
+        >{{ article.article_details.attitude === 1 ? '取消点赞' : '点赞' }}</van-button>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button
             round
@@ -59,6 +60,7 @@
             type="danger"
             plain
             icon="delete"
+            @click="OnLike"
         >不喜欢</van-button>
       </div>
     </div>
@@ -77,7 +79,7 @@
 </template>
 
 <script>
-import { getartile } from '../../api/NewList.js'
+import { getartile, ArtileLike, CancelLike } from '../../api/NewList.js'
 import { Attention, CancelAttention } from '../../api/user'
 
 export default {
@@ -126,6 +128,21 @@ export default {
       // 2、仅改变单个组件的样式；
       this.article.article_details.is_followed =
         !this.article.article_details.is_followed
+    },
+    async OnLike () {
+
+    },
+    async OnArticlelike (type) {
+      // 获取文章id；
+      const aricleid = this.article.article_details.art_id
+      // 如果已点赞，则取消点赞
+      if (type === 1) {
+        await CancelLike(aricleid)
+        this.article.article_details.attitude = -1
+      } else {
+        await ArtileLike(aricleid)
+        this.article.article_details.attitude = 1
+      }
     }
   }
 }
