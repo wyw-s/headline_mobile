@@ -34,11 +34,20 @@
               finished-text="没有更多了"
               @load="onLoad"
           >
+            <!--
+              动态路由传参的另一种方式；
+            -->
             <van-cell
                 v-for="(art, index) in Channel.news"
                 :key="index"
                 :title="art.title"
                 class="imgstyle"
+                @click="$router.push({
+                  name: 'article',
+                  params: {
+                    articleId: art.art_id
+                  }
+                })"
             >
               <van-grid :border="false" :column-num="3">
                 <van-grid-item

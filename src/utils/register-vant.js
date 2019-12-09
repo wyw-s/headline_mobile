@@ -21,7 +21,8 @@ import {
   Image,
   Popup,
   Icon,
-  Search
+  Search,
+  Loading
 } from 'vant'
 
 Vue
@@ -44,3 +45,4 @@ Vue
   .use(Popup)
   .use(Icon)
   .use(Search)
+  .use(Loading)
