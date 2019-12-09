@@ -38,3 +38,22 @@ export const CancelLike = function (ArticleId) {
     url: `/app/v1_0/article/likings/${ArticleId}`
   })
 }
+
+// 取消对文章不喜欢
+export const cancelLike = function (articleID) {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/dislikes/${articleID}`
+  })
+}
+
+// 对文章不喜欢
+export const NotLike = function (articleid) {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/dislikes',
+    data: {
+      target: articleid
+    }
+  })
+}

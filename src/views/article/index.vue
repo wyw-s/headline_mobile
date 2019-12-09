@@ -60,8 +60,8 @@
             type="danger"
             plain
             icon="delete"
-            @click="OnLike"
-        >不喜欢</van-button>
+            @click="OnLike(article.article_details.attitude)"
+        >{{ article.article_details.attitude === 0 ? '取消不喜欢' : '喜欢' }}</van-button>
       </div>
     </div>
     <!-- /文章详情 -->
@@ -79,7 +79,13 @@
 </template>
 
 <script>
-import { getartile, ArtileLike, CancelLike } from '../../api/NewList.js'
+import {
+  getartile,
+  ArtileLike,
+  CancelLike,
+  cancelLike,
+  NotLike
+} from '../../api/NewList.js'
 import { Attention, CancelAttention } from '../../api/user'
 
 export default {
@@ -129,9 +135,20 @@ export default {
       this.article.article_details.is_followed =
         !this.article.article_details.is_followed
     },
-    async OnLike () {
-
+    // 对文章喜欢与不喜欢
+    async OnLike (type) {
+      // 获取文章id；
+      const aricleid = this.article.article_details.art_id
+      // 如果是喜欢则取消喜欢；
+      if (!type) {
+        await cancelLike(aricleid)
+        this.article.article_details.attitude = -1
+      } else {
+        await NotLike(aricleid)
+        this.article.article_details.attitude = 0
+      }
     },
+    // 对文章点赞与不点赞
     async OnArticlelike (type) {
       // 获取文章id；
       const aricleid = this.article.article_details.art_id
