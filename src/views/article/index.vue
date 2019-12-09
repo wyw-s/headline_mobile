@@ -17,29 +17,60 @@
     <div class="detail" v-else-if="article.article_details.title">
       <h3 class="title">{{article.article_details.title}}</h3>
       <div class="author">
-        <van-image round width="2rem" height="2rem" fit="fill" :src="article.article_details.aut_photo" />
+        <van-image
+            round
+            width="2rem"
+            height="2rem"
+            fit="fill"
+            :src="article.article_details.aut_photo"
+        />
         <div class="text">
           <p class="name">{{article.article_details.aut_name}}</p>
-          <p class="time">{{article.article_details.pubdate | relativeTime}}</p>
+          <p
+              class="time"
+          >
+            {{article.article_details.pubdate | relativeTime}}
+          </p>
         </div>
         <van-button
             round
             size="small"
             type="info"
-        >+ 关注</van-button>
+            @click="OnAttention(article.article_details.is_followed)"
+        >
+          {{ article.article_details.is_followed ? '取消关注' : '+ 关注'}}
+        </van-button>
       </div>
       <div class="content" v-html="article.article_details.content"></div>
       <div class="zan">
-        <van-button round size="small" hairline type="primary" plain icon="good-job-o">点赞</van-button>
+        <van-button
+            round
+            size="small"
+            hairline
+            type="primary"
+            plain
+            icon="good-job-o"
+        >点赞</van-button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <van-button round size="small" hairline type="danger" plain icon="delete">不喜欢</van-button>
+        <van-button
+            round
+            size="small"
+            hairline
+            type="danger"
+            plain
+            icon="delete"
+        >不喜欢</van-button>
       </div>
     </div>
     <!-- /文章详情 -->
 
     <!-- 加载失败的消息提示 -->
     <div class="error" v-else>
-      <p>网络超时，点击 <a href="#" @click.prevent="loadArticle">刷新</a> 试一试。</p>
+      <p>
+        网络超时，点击
+        <a href="#" @click.prevent="loadArticle">刷新
+        </a> 试一试。
+      </p>
     </div>
     <!-- /加载失败的消息提示 -->
   </div>
@@ -47,6 +78,8 @@
 
 <script>
 import { getartile } from '../../api/NewList.js'
+import { Attention, CancelAttention } from '../../api/user'
+
 export default {
   name: 'ArticleIndex',
   props: {
@@ -76,6 +109,23 @@ export default {
       }
       // 无论请求是否成功都需要停止加载状态；
       this.loading = false
+    },
+    // 关注与取消关注
+    async OnAttention (boolean) {
+      // 获取用户id；
+      const userid = this.article.article_details.aut_id
+      // 如果已关注，则取消关注；
+      if (boolean) {
+        await CancelAttention(userid)
+      } else {
+        await Attention(userid)
+      }
+      // 关注修改完成后要进行视图的更新
+      // 1、从新渲染整个页面进行视图的更新；
+      // this.LoadArticle_details()
+      // 2、仅改变单个组件的样式；
+      this.article.article_details.is_followed =
+        !this.article.article_details.is_followed
     }
   }
 }
