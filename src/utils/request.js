@@ -48,7 +48,6 @@ request.defaults.transformResponse = [
     try {
       return JsonBib.parse(data)
     } catch (e) {
-      console.log(e)
       return {}
     }
   }

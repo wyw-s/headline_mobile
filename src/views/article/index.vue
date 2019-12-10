@@ -7,10 +7,10 @@
         @click-left="$router.back()"
         title="文章详情"
     ></van-nav-bar>
-    <!-- /导航栏 -->
+    <!-- 导航栏 -->
 
     <!-- 加载中 loading -->
-    <van-loading class="article-loading" v-if="loading" />
+    <van-loading class="article-loading" v-if="loading"/>
     <!-- /加载中 loading -->
 
     <!-- 文章详情 -->
@@ -51,7 +51,8 @@
             plain
             icon="good-job-o"
             @click="OnArticlelike(article.article_details.attitude)"
-        >{{ article.article_details.attitude === 1 ? '取消点赞' : '点赞' }}</van-button>
+        >{{ article.article_details.attitude === 1 ? '取消点赞' : '点赞' }}
+        </van-button>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button
             round
@@ -61,7 +62,8 @@
             plain
             icon="delete"
             @click="OnLike(article.article_details.attitude)"
-        >{{ article.article_details.attitude === 0 ? '取消不喜欢' : '喜欢' }}</van-button>
+        >{{ article.article_details.attitude === 0 ? '取消不喜欢' : '喜欢' }}
+        </van-button>
       </div>
     </div>
     <!-- /文章详情 -->
@@ -75,6 +77,9 @@
       </p>
     </div>
     <!-- /加载失败的消息提示 -->
+    <!-- 文章评论 -->
+    <article-comment></article-comment>
+    <!-- 文章评论 -->
   </div>
 </template>
 
@@ -87,6 +92,7 @@ import {
   NotLike
 } from '../../api/NewList.js'
 import { Attention, CancelAttention } from '../../api/user'
+import ArticleComment from './components/article-comment'
 
 export default {
   name: 'ArticleIndex',
@@ -95,6 +101,9 @@ export default {
       type: String,
       required: true
     }
+  },
+  components: {
+    ArticleComment
   },
   data () {
     return {
@@ -166,7 +175,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
-  .article-container{
+  .article-container {
     position: absolute;
     left: 0;
     top: 0;
@@ -174,33 +183,42 @@ export default {
     width: 100%;
     height: 100%;
   }
+
   .article-loading {
     padding-top: 100px;
     text-align: center;
   }
-  .error{
+
+  .error {
     padding-top: 100px;
     text-align: center;
   }
+
   .detail {
     padding: 50px 10px;
+
     .title {
       font-size: 16px;
     }
-    .zan{
+
+    .zan {
       text-align: center;
     }
+
     .author {
       padding: 10px 0;
       display: flex;
+
       .text {
         flex: 1;
         padding-left: 10px;
         line-height: 1.3;
+
         .name {
           font-size: 14px;
           margin: 0;
         }
+
         .time {
           margin: 0;
           font-size: 12px;
@@ -208,12 +226,14 @@ export default {
         }
       }
     }
+
     .content {
       overflow: hidden;
       white-space: pre-wrap;
       word-break: break-all;
-      /deep/ img{
-        max-width:100%;
+
+      /deep/ img {
+        max-width: 100%;
         background: #f9f9f9;
       }
     }

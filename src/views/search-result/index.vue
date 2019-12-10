@@ -28,7 +28,6 @@
 
 <script>
 import { SearchResult } from '../../api/search'
-
 export default {
   name: 'search_index',
   data () {
