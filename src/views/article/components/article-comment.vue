@@ -8,9 +8,9 @@
         @load="onLoad"
     >
       <van-cell
-          v-for="item in list"
-          :key="item"
-          :title="item"
+          v-for="comment in list"
+          :key="comment.com_id.toString()"
+          :title="comment.content"
       >
         <van-image
             slot="icon"
@@ -18,13 +18,13 @@
             width="30"
             height="30"
             style="margin-right: 10px;"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="comment.aut_photo"
         />
-        <span style="color: #466b9d;" slot="title">hello</span>
+        <span style="color: #466b9d;" slot="title">{{ comment.aut_name}}</span>
         <div slot="label">
-          <p style="color: #363636;">我出去跟别人说我的是。。。</p>
+          <p style="color: #363636;">{{ comment.content }}</p>
           <p>
-            <span style="margin-right: 10px;">3天前</span>
+            <span style="margin-right: 10px;">{{ comment.pubdate | relativeTime }}</span>
             <van-button size="mini" type="default">回复</van-button>
           </p>
         </div>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { getComments } from '@/api/comment'
 export default {
   name: 'ArticleComment',
   props: {},
@@ -54,25 +55,32 @@ export default {
     return {
       list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
-      finished: false // 是否加载结束
+      finished: false, // 是否加载结束
+      offset: null // 获取加载下一页的数据信息
     }
   },
 
   methods: {
-    onLoad () {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
+    async onLoad () {
+      // 开始请求
+      const { data } = await getComments({
+        type: 'a',
+        source: this.$route.params.articleId,
+        offset: this.offset
+      })
+      // 把响应的数据添加到数组中；
+      this.list.push(...data.data.result)
+      // loading 加载状态结束
+      this.loading = false
 
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
+      // 判断数据是否全部加载完成
+      if (!data.data.result.length) {
+        // 全部加载完成停止loading效果；
+        this.finished = true
+      } else {
+        // 若还有数据存在则获取架子啊下页的数据
+        this.offset = data.data.last_id
+      }
     }
   }
 }
