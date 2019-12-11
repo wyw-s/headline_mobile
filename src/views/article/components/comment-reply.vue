@@ -1,7 +1,7 @@
 <template>
   <div class="article-comments">
     <!-- 导航栏 -->
-    <van-nav-bar title="10条回复" class="left_arrow">
+    <van-nav-bar :title="comment.reply_count+'条回复'" class="left_arrow">
       <van-icon slot="left" name="cross" />
     </van-nav-bar>
     <!-- /导航栏 -->
@@ -14,17 +14,17 @@
           width="30"
           height="30"
           style="margin-right: 10px;"
-          src=""
+          :src="comment.aut_photo"
       />
-      <span style="color: #466b9d;" slot="title">作者昵称</span>
+      <span style="color: #466b9d;" slot="title">{{ comment.aut_name }}</span>
       <div slot="label">
-        <p style="color: #363636;">评论内容</p>
+        <p style="color: #363636;">{{ comment.content }}</p>
         <p>
-          <span style="margin-right: 10px;">10天前</span>
+          <span style="margin-right: 10px;">{{ comment.pubdate | relativeTime }}</span>
           <van-button
               size="mini"
               type="default"
-          >回复 10</van-button>
+          >回复  {{ comment.reply_count }}</van-button>
         </p>
       </div>
       <van-icon slot="right-icon" />
@@ -39,6 +39,12 @@
 
 export default {
   name: 'CommentReply',
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       list: [], // 评论列表

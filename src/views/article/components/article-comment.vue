@@ -28,7 +28,7 @@
             <van-button
                 size="mini"
                 type="default"
-                @click="onReplyShow"
+                @click="onReplyShow(comment)"
             >回复</van-button>
           </p>
         </div>
@@ -69,7 +69,7 @@
         :style="{ height: '90%' }"
     >
       <!--回复列表-->
-      <comment-reply></comment-reply>
+      <comment-reply :comment="currentComment"></comment-reply>
       <!--回复列表-->
     </van-popup>
     <!-- 评论弹层 -->
@@ -97,7 +97,8 @@ export default {
       finished: false, // 是否加载结束
       offset: null, // 获取加载下一页的数据信息
       inputComment: '',
-      Show_hide: false
+      Show_hide: false,
+      currentComment: {} // 存储当前点击回复的评论对象
     }
   },
 
@@ -150,7 +151,8 @@ export default {
       // 友好提示；
       this.$toast('操作成功')
     },
-    async onReplyShow () {
+    async onReplyShow (comment) {
+      this.currentComment = comment
       this.Show_hide = true
     }
   }
