@@ -67,7 +67,11 @@
         v-model="Show_hide"
         position="bottom"
         :style="{ height: '90%' }"
-    />
+    >
+      <!--回复列表-->
+      <comment-reply></comment-reply>
+      <!--回复列表-->
+    </van-popup>
     <!-- 评论弹层 -->
   </div>
 </template>
@@ -79,10 +83,13 @@ import {
   CommentLike,
   CancelCommentLike
 } from '../../../api/comment'
+import CommentReply from './comment-reply'
 
 export default {
   name: 'ArticleComment',
-  props: {},
+  components: {
+    CommentReply
+  },
   data () {
     return {
       list: [], // 评论列表
