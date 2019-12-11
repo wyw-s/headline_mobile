@@ -12,3 +12,12 @@ export const getComments = function (params) {
     params
   })
 }
+
+// 添加评论或评论回复 ；
+export const PublishArticle = function (data) {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comments',
+    data
+  })
+}

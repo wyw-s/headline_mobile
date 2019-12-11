@@ -38,8 +38,15 @@
       <van-field
           clearable
           placeholder="请输入评论内容"
+          v-model="inputComment"
       >
-        <van-button slot="button" size="mini" type="info">发布</van-button>
+        <van-button
+            slot="button"
+            size="mini"
+            type="info"
+            @click="OnIssue"
+        >发布
+        </van-button>
       </van-field>
     </van-cell-group>
     <!-- /发布评论 -->
@@ -47,7 +54,8 @@
 </template>
 
 <script>
-import { getComments } from '@/api/comment'
+import { getComments, PublishArticle } from '@/api/comment'
+
 export default {
   name: 'ArticleComment',
   props: {},
@@ -56,7 +64,8 @@ export default {
       list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
-      offset: null // 获取加载下一页的数据信息
+      offset: null, // 获取加载下一页的数据信息
+      inputComment: ''
     }
   },
 
@@ -69,18 +78,33 @@ export default {
         offset: this.offset
       })
       // 把响应的数据添加到数组中；
-      this.list.push(...data.data.result)
+      this.list.push(...data.data.results)
       // loading 加载状态结束
       this.loading = false
 
       // 判断数据是否全部加载完成
-      if (!data.data.result.length) {
+      if (!data.data.results.length) {
         // 全部加载完成停止loading效果；
         this.finished = true
       } else {
         // 若还有数据存在则获取架子啊下页的数据
         this.offset = data.data.last_id
       }
+    },
+    async OnIssue () {
+      const Conment = this.inputComment.trim()
+      // 非空判断；
+      if (!Conment.length) {
+        return
+      }
+      const { data } = await PublishArticle({
+        target: this.$route.params.articleId,
+        content: Conment
+      })
+      // 将发布的消息添加到头部；注意这里不能用...展开；
+      this.list.unshift(data.data.new_obj)
+      // 发布完成则请空文本框；
+      this.inputComment = ''
     }
   }
 }
