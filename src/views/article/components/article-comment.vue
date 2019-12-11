@@ -69,7 +69,16 @@
         :style="{ height: '90%' }"
     >
       <!--回复列表-->
-      <comment-reply :comment="currentComment"></comment-reply>
+      <!--
+      弹层第一次加载完数据之后，关闭弹层，则知识显示与隐藏，组件并没有销毁
+      v-if="Show_hide"解决组件复用问题，
+      让组件每次都从新渲染，而不是复用
+      -->
+      <comment-reply
+          :comment="currentComment"
+          v-if="Show_hide"
+          @close-reply="Show_hide = false"
+      ></comment-reply>
       <!--回复列表-->
     </van-popup>
     <!-- 评论弹层 -->

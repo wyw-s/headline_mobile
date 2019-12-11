@@ -6,6 +6,7 @@ import Home from '../views/home/index.vue'
 import Search from '../views/search'
 import SearchResult from '../views/search-result'
 import Article from '../views/article'
+import my from '../views/my'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,10 @@ const routes = [
       {
         path: '', // 默认子路由
         component: Home
+      },
+      {
+        path: '/my',
+        component: my
       }
     ]
   },
