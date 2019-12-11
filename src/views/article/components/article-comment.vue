@@ -25,10 +25,19 @@
           <p style="color: #363636;">{{ comment.content }}</p>
           <p>
             <span style="margin-right: 10px;">{{ comment.pubdate | relativeTime }}</span>
-            <van-button size="mini" type="default">回复</van-button>
+            <van-button
+                size="mini"
+                type="default"
+                @click="onReplyShow"
+            >回复</van-button>
           </p>
         </div>
-        <van-icon slot="right-icon" name="like-o"/>
+        <van-icon
+            slot="right-icon"
+            color="red"
+            :name="comment.is_liking ? 'like' : 'like-o'"
+            @click="OnLike(comment)"
+        />
       </van-cell>
     </van-list>
     <!-- 评论列表 -->
@@ -50,11 +59,26 @@
       </van-field>
     </van-cell-group>
     <!-- /发布评论 -->
+    <!-- 评论弹层 -->
+    <!--get-container="body" 挂载到body节点下-->
+    <van-popup
+        get-container="body"
+        round
+        v-model="Show_hide"
+        position="bottom"
+        :style="{ height: '90%' }"
+    />
+    <!-- 评论弹层 -->
   </div>
 </template>
 
 <script>
-import { getComments, PublishArticle } from '@/api/comment'
+import {
+  getComments,
+  PublishArticle,
+  CommentLike,
+  CancelCommentLike
+} from '../../../api/comment'
 
 export default {
   name: 'ArticleComment',
@@ -65,7 +89,8 @@ export default {
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
       offset: null, // 获取加载下一页的数据信息
-      inputComment: ''
+      inputComment: '',
+      Show_hide: false
     }
   },
 
@@ -105,6 +130,21 @@ export default {
       this.list.unshift(data.data.new_obj)
       // 发布完成则请空文本框；
       this.inputComment = ''
+    },
+    async OnLike (comment) {
+      // 当前若是喜欢则点击取消点赞
+      if (comment.is_liking) {
+        await CancelCommentLike(comment.com_id)
+      } else {
+        await CommentLike(comment.com_id)
+      }
+      // 修改完毕进行视图的更新；
+      comment.is_liking = !comment.is_liking
+      // 友好提示；
+      this.$toast('操作成功')
+    },
+    async onReplyShow () {
+      this.Show_hide = true
     }
   }
 }

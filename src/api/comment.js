@@ -21,3 +21,22 @@ export const PublishArticle = function (data) {
     data
   })
 }
+
+// 对评论或评论回复点赞
+export const CommentLike = function (CommentID) {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comment/likings',
+    data: {
+      target: CommentID
+    }
+  })
+}
+
+// 取消对评论或评论回复点赞
+export const CancelCommentLike = function (CommentID) {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/comment/likings/${CommentID}`
+  })
+}
