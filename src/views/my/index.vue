@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- 未登录 -->
-    <div class="not-login">
+    <!--
+    未登录则显示登录，否则隐藏登录，显示用户信息
+    -->
+    <div class="not-login" v-if="!$store.state.Token">
       <div class="circle" @click="$router.push({ name: 'login' })">
         <span>登录</span>
       </div>
@@ -9,7 +12,7 @@
     <!-- /未登录 -->
 
     <!-- 用户信息 -->
-    <van-cell-group class="user-info">
+    <van-cell-group class="user-info" v-else>
       <van-cell
           class="base-info"
           is-link :border="false"
@@ -57,6 +60,7 @@
       <van-cell title="系统设置" is-link to="/settings" />
     </van-cell-group>
     <!-- /其它 -->
+    <van-cell title="退出登录" @click="onLogout" />
   </div>
 </template>
 
@@ -66,6 +70,22 @@ export default {
   data () {
     return {
       user: {} // 用户信息对象
+    }
+  },
+  methods: {
+    // 点击退出
+    onLogout () {
+      this.$dialog.confirm({
+        title: '退出提示',
+        message: '确认退出吗'
+      }).then(() => {
+        // 同删除本地和vuex里面的的用户信息
+        // 若代码在vuex里运行错误则不会显示报错信息；
+        // 此刻后面的代码也不会执行；
+        this.$store.commit('SetUser', null)
+      }).catch(() => {
+        // on cancel
+      })
     }
   }
 }

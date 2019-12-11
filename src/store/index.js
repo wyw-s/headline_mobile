@@ -24,8 +24,8 @@ export default new Vuex.Store({
        * 那么后面如果没有mutations的修改的话，state的数据便不会再更新 始终为null
        * 除非页面刷新重新加载获取数据
        */
-      state.Token = data.data
-      SetStorage('login_token', data.data)
+      state.Token = data
+      SetStorage('login_token', state.Token)
     }
   },
   actions: {
