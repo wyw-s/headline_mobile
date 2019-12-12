@@ -55,3 +55,12 @@ export const EdilUserInfo = function (data) {
     data
   })
 }
+
+// 编辑用户照片资料
+export const updateUserPhoto = function (data) {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
+    data
+  })
+}
