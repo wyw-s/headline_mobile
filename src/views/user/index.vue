@@ -6,7 +6,7 @@
         right-text="保存"
     />
     <van-cell-group>
-      <van-cell title="头像" is-link>
+      <van-cell title="头像" is-link @click="onChangePhoto">
         <van-image
             round
             width="30"
@@ -18,6 +18,12 @@
       <van-cell title="性别" :value="User.gender === 1 ? '女' : '男'" is-link />
       <van-cell title="生日" :value="User.birthday" is-link />
     </van-cell-group>
+    <input
+        type="file"
+        hidden
+        @change="onFileChange"
+        ref="file"
+    >
   </div>
 </template>
 
@@ -38,7 +44,12 @@ export default {
     async loadUser () {
       const { data } = await getUserInfo()
       this.User = data.data
-      console.log(data)
+    },
+    onChangePhoto () {
+      this.$refs.file.click()
+    },
+    onFileChange () {
+      this.User.photo = window.URL.createObjectURL(this.$refs.file.files[0])
     }
   }
 }

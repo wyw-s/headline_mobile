@@ -23,7 +23,8 @@ import {
   Icon,
   Search,
   Loading,
-  Dialog
+  Dialog,
+  Uploader
 } from 'vant'
 
 Vue
@@ -48,3 +49,4 @@ Vue
   .use(Search)
   .use(Loading)
   .use(Dialog)
+  .use(Uploader)
