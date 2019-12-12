@@ -38,3 +38,20 @@ export function getSelf () {
     url: '/app/v1_0/user'
   })
 }
+
+// 获取用户个人资料
+export const getUserInfo = function () {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+
+// 编辑用户个人资料
+export const EdilUserInfo = function (data) {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/profile',
+    data
+  })
+}
