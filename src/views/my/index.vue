@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { getSelf } from '../../api/user'
+
 export default {
   name: 'UserIndex',
   data () {
@@ -72,7 +74,17 @@ export default {
       user: {} // 用户信息对象
     }
   },
+  created () {
+    // 如果用户登录了才展示用户信息
+    if (this.$store.state.Token) {
+      this.loadUser()
+    }
+  },
   methods: {
+    async loadUser () {
+      const { data } = await getSelf()
+      this.user = data.data
+    },
     // 点击退出
     onLogout () {
       this.$dialog.confirm({
