@@ -7,6 +7,7 @@ import Search from '../views/search'
 import SearchResult from '../views/search-result'
 import Article from '../views/article'
 import my from '../views/my'
+import User from '../views/user'
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,11 @@ const routes = [
     path: '/article/:articleId',
     component: Article,
     props: true
+  },
+  {
+    name: 'user',
+    path: '/user',
+    component: User
   }
 ]
 
