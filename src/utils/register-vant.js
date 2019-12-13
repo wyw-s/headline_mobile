@@ -25,7 +25,8 @@ import {
   Loading,
   Dialog,
   Uploader,
-  ActionSheet
+  ActionSheet,
+  DatetimePicker
 } from 'vant'
 
 Vue
@@ -52,3 +53,4 @@ Vue
   .use(Dialog)
   .use(Uploader)
   .use(ActionSheet)
+  .use(DatetimePicker)

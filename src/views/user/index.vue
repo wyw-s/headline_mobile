@@ -27,7 +27,12 @@
           is-link
           @click="isEditGenderShow = true"
       />
-      <van-cell title="生日" :value="User.birthday" is-link/>
+      <van-cell
+          title="生日"
+          :value="User.birthday"
+          is-link
+          @click="isEditBirthdayShow = true"
+      />
     </van-cell-group>
     <!-- 隐藏域 -->
     <input
@@ -60,12 +65,24 @@
         @select="onSelect"
     />
     <!-- /编辑用户昵称上拉菜单 -->
+    <!--修改日期-->
+    <van-popup
+        v-model="isEditBirthdayShow"
+        position="bottom"
+        :style="{ height: '30%' }"
+    >
+      <van-datetime-picker
+          type="date"
+          @confirm="onUserBirthdayConfirm"
+          @cancel="isEditBirthdayShow = false"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserInfo, updateUserPhoto } from '../../api/user'
-
+import dayjs from 'dayjs'
 export default {
   name: 'UserIndex',
   data () {
@@ -80,7 +97,9 @@ export default {
         // value 是我自己自定义添加的
         { name: '男', value: 0 },
         { name: '女', value: 1 }
-      ]
+      ],
+      currentDate: new Date(),
+      isEditBirthdayShow: false
     }
   },
   created () {
@@ -127,6 +146,13 @@ export default {
       this.isEditGenderShow = false
       this.User.gender = obj.value
       this.$toast('cancel')
+    },
+    // 日期修改；
+    onUserBirthdayConfirm (value) {
+      // 更新数据
+      this.User.birthday = dayjs(value).format('YYYY-MM-DD')
+      // 关闭弹层；
+      this.isEditBirthdayShow = false
     }
   }
 }
