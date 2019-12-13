@@ -5,6 +5,7 @@
         left-arrow
         right-text="保存"
         @click-right="onSave"
+        @click-left="$router.push('/my')"
     />
     <van-cell-group>
       <van-cell title="头像" is-link @click="onChangePhoto">
@@ -81,8 +82,9 @@
 </template>
 
 <script>
-import { getUserInfo, updateUserPhoto } from '../../api/user'
+import { getUserInfo, updateUserPhoto, EdilUserInfo } from '../../api/user'
 import dayjs from 'dayjs'
+
 export default {
   name: 'UserIndex',
   data () {
@@ -126,9 +128,17 @@ export default {
         message: '保存中'
       })
       try {
-        const formData = new FormData()
-        formData.append('photo', this.$refs.file.files[0])
-        await updateUserPhoto(formData)
+        // 如果用户选择了头像就更新头像，否则更新用户其他信息；
+        if (this.$refs.file.files[0]) {
+          const formData = new FormData()
+          formData.append('photo', this.$refs.file.files[0])
+          await updateUserPhoto(formData)
+        }
+        await EdilUserInfo({
+          name: this.User.name,
+          gender: this.User.gender,
+          birthday: this.User.birthday
+        })
         this.$toast.success('保存成功')
       } catch (e) {
         this.$toast.success('保存失败')
