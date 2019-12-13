@@ -24,7 +24,8 @@ import {
   Search,
   Loading,
   Dialog,
-  Uploader
+  Uploader,
+  ActionSheet
 } from 'vant'
 
 Vue
@@ -50,3 +51,4 @@ Vue
   .use(Loading)
   .use(Dialog)
   .use(Uploader)
+  .use(ActionSheet)

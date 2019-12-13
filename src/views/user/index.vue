@@ -15,16 +15,51 @@
             :src="User.photo"
         />
       </van-cell>
-      <van-cell title="昵称" :value="User.name" is-link/>
-      <van-cell title="性别" :value="User.gender === 1 ? '女' : '男'" is-link/>
+      <van-cell
+          title="昵称"
+          :value="User.name"
+          is-link
+          @click="isEditNameShow = true"
+      />
+      <van-cell
+          title="性别"
+          :value="User.gender === 1 ? '女' : '男'"
+          is-link
+          @click="isEditGenderShow = true"
+      />
       <van-cell title="生日" :value="User.birthday" is-link/>
     </van-cell-group>
+    <!-- 隐藏域 -->
     <input
         type="file"
         hidden
         @change="onFileChange"
         ref="file"
     >
+    <!-- 编辑昵称弹窗 -->
+    <van-dialog
+        v-model="isEditNameShow"
+        title="昵称修改"
+        show-cancel-button
+        @confirm="onUserNameConfirm"
+    >
+      <!--此处不能用v-moudel双向绑定因为用户还没确定呢，数据就已经改了-->
+      <van-field
+          label="昵称"
+          :value="User.name"
+          placeholder="请输入昵称"
+          @input="onUserNameInput"
+      />
+    </van-dialog>
+
+    <!-- 编辑用户昵称上拉菜单 -->
+    <van-action-sheet
+        v-model="isEditGenderShow"
+        :actions="actions"
+        cancel-text="取消"
+        @select="onSelect"
+    />
+    <!-- /编辑用户昵称上拉菜单 -->
   </div>
 </template>
 
@@ -35,7 +70,17 @@ export default {
   name: 'UserIndex',
   data () {
     return {
-      User: {}
+      User: {},
+      isEditNameShow: false,
+      UserNickname: '', // 用户昵称
+      isEditGenderShow: false,
+      actions: [
+        // 上拉菜单的数据
+        // name 会当作文本输出渲染
+        // value 是我自己自定义添加的
+        { name: '男', value: 0 },
+        { name: '女', value: 1 }
+      ]
     }
   },
   created () {
@@ -69,6 +114,19 @@ export default {
       } catch (e) {
         this.$toast.success('保存失败')
       }
+    },
+    // 修改昵称
+    onUserNameInput (value) {
+      this.UserNickname = value
+    },
+    onUserNameConfirm () {
+      this.User.name = this.UserNickname
+    },
+    // 修改性别
+    onSelect (obj) {
+      this.isEditGenderShow = false
+      this.User.gender = obj.value
+      this.$toast('cancel')
     }
   }
 }
