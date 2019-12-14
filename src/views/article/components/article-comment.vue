@@ -116,7 +116,7 @@ export default {
       // 开始请求
       const { data } = await getComments({
         type: 'a',
-        source: this.$route.params.articleId,
+        source: this.$route.params.articleId.toString(),
         offset: this.offset
       })
       // 把响应的数据添加到数组中；

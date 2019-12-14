@@ -5,6 +5,7 @@
 import axios from 'axios'
 import JsonBib from 'json-bigint'
 import store from '../store/index.js'
+import router from '../router/index.js'
 
 /**
  * 封装 axios 函数
@@ -60,7 +61,38 @@ request.interceptors.response.use(
   function (response) {
     return response
   },
-  function (error) {
+  async function (error) {
+    // 判断如果错误代码为 401 则需要从新获取token
+    if (error.response.status === 401) {
+      const user = store.state.Token
+      // 校验token是否存在或是否有 refresh_token
+      if (!user || !user.refresh_token) {
+        // 跳转到登录页；
+        router.push('/login')
+        return
+      }
+      // 如果有refresh_token，则请求获取新的 token
+      try {
+        const res = await axios({
+          method: 'PUT',
+          url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+          headers: {
+            Authorization: `Bearer ${user.refresh_token}`
+          }
+        })
+        store.commit('setUser', {
+          token: res.data.data.token, // 最新获取的可用 token
+          refresh_token: user.refresh_token // 还是原来的 refresh_token
+        })
+        // 把之前失败的用户请求继续发出去
+        // config 是一个对象，其中包含本次失败请求相关的那些配置信息，例如 url、method 都有
+        // return 把 request 的请求结果继续返回给发请求的具体位置
+        return request(error.config)
+      } catch (e) {
+        // 如果获取失败，直接跳转 登录页
+        router.push('/login')
+      }
+    }
     return Promise.reject(error)
   }
 )
