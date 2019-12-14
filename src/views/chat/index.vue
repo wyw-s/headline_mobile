@@ -45,7 +45,8 @@
             size="small"
             type="primary"
             @click="OnSend"
-        >发送</van-button>
+        >发送
+        </van-button>
       </van-field>
     </van-cell-group>
     <!-- /发送消息 -->
@@ -55,6 +56,7 @@
 <script>
 import io from 'socket.io-client'
 import { SetStorage, GetStorage } from '../../utils/storage.js'
+
 export default {
   name: 'socket',
   data () {
@@ -67,9 +69,16 @@ export default {
   watch: {
     messages: function () {
       SetStorage('message', this.messages)
+      const messageList = this.$refs['message-list']
+      this.$nextTick(() => {
+        messageList.scrollTop = messageList.scrollHeight
+      })
     }
   },
-
+  mounted () {
+    const messageList = this.$refs['message-list']
+    messageList.scrollTop = messageList.scrollHeight
+  },
   created () {
     const socke = io('http://ttapi.research.itcast.cn')
     this.socket = socke
@@ -110,32 +119,40 @@ export default {
     left: 0;
     box-sizing: border-box;
     background: #f5f5f6;
+
     .left_arrow {
       .van-icon {
         color: #fff;
       }
+
       .van-nav-bar__title {
         color: #fff;
       }
     }
+
     .message-list {
       height: 100%;
       overflow-y: scroll;
+
       .message-item {
         display: flex;
         align-items: center;
         padding: 10px;
+
         .title {
           background: #fff;
           padding: 5px;
           border-radius: 6px;
         }
+
         .avatar {
           margin-right: 5px;
         }
       }
+
       .reverse {
         flex-direction: row-reverse;
+
         .title {
           margin-right: 5px;
         }
