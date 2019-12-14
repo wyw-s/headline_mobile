@@ -226,7 +226,6 @@ export default {
        * 当第二次加载时，会再一次向数组中添加响应回来的数据(从后添加)
        */
       ChannelNew.news.push(...data.data.results)
-      console.log(123)
       // 加载状态结束
       ChannelNew.loading = false
       // 若响应回来的数据还有事件戳，则表明数据还有数据可以加载，
