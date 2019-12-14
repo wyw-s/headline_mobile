@@ -154,7 +154,7 @@ export default {
       const { data } = await PublishArticle({
         target: this.comment.com_id.toString(),
         content: Conment,
-        art_id: this.$route.params.articleId
+        art_id: this.$route.params.articleId.toString()
       })
       // 将发布的消息添加到头部；注意这里不能用...展开；
       this.list.unshift(data.data.new_obj)

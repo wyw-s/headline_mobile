@@ -68,7 +68,8 @@ request.interceptors.response.use(
       // 校验token是否存在或是否有 refresh_token
       if (!user || !user.refresh_token) {
         // 跳转到登录页；
-        router.push('/login')
+        // router.push('/login')
+        redirectLogin()
         return
       }
       // 如果有refresh_token，则请求获取新的 token
@@ -90,12 +91,16 @@ request.interceptors.response.use(
         return request(error.config)
       } catch (e) {
         // 如果获取失败，直接跳转 登录页
-        router.push('/login')
+        // router.push('/login')
+        redirectLogin()
       }
     }
     return Promise.reject(error)
   }
 )
-
+function redirectLogin () {
+  // router.currentRoute 当前路由对象，和在组件中访问的 this.$route 是同一个东西
+  router.push('/login?redirect=' + router.currentRoute.fullPath)
+}
 // 导出；
 export default request

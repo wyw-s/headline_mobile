@@ -98,7 +98,7 @@ export default {
   name: 'ArticleIndex',
   props: {
     articleId: {
-      type: String,
+      type: [String, Number],
       required: true
     }
   },

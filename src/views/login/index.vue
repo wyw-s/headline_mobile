@@ -50,7 +50,9 @@ export default {
         // 登录成功把token保存起来
         this.$store.commit('SetUser', data.data)
         // 跳转到首页；
-        this.$router.push('/')
+        // this.$router.push('/')
+        const redirect = this.$route.query.redirect || '/'
+        this.$router.push(redirect)
         this.$toast.success('登录成功')
       } catch (error) {
         this.$toast.fail('登录失败,手机号或验证码错误')
