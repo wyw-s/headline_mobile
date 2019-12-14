@@ -8,6 +8,7 @@ import SearchResult from '../views/search-result'
 import Article from '../views/article'
 import my from '../views/my'
 import User from '../views/user'
+import Chat from '../views/chat'
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,12 @@ const routes = [
     name: 'user',
     path: '/user',
     component: User
+  },
+  // 聊天机器；
+  {
+    name: 'chat',
+    path: '/chat',
+    component: Chat
   }
 ]
 
